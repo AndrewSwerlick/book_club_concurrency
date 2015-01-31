@@ -1,0 +1,20 @@
+Questions
+==========
+
+What guarantees does the Java memory model make regarding initialization safety? Is it always necessary to use locks to safely publish objects between threads?
+-----
+
+Not sure if this is referring to how final variables are set when an object is being constructed or not. That section suggests that things are safe so long as you don't "leak" a reference to a constructed object (ie, assign it to a property on another class in the constructor). As for the second part, it sounds like using a synchronized lock is always necessary
+
+What is the double-checked locking anti-pattern? Why is it an anti-pattern?
+------
+
+A pattern where you check if an object is initialized, and then enter into the synchronized code path. Then you check again while inside of synchronization to avoid a race condition. This doesn't work however, because null/not null is not the binary event that we suppose it to be. Because of how the compiler can reorder commands, it's possible that the memory for the object has been allocated and a reference has been set in that memory before the object has actually been fully constructed. As a result the unsynchronized code might get a half-backed object
+
+Do
+=====
+
+Experiment with the original, broken “dining philosophers” example. Try modifying the length of time that philosophers think and eat and the number of philosophers. What effect does this have on how long it takes until deadlock? Imagine that you were trying to debug this and wanted to increase the likelihood of reproducing the deadlock— what would you do?
+-------
+
+I believe that upping the eating time will increase the chance for a deadlock. The longer they're eating the longer the chopstick is locked. I increased the eating time by a factor of 100 and I no longer saw any output.
