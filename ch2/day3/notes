@@ -1,0 +1,45 @@
+Questions
+==========
+
+The documentation for ForkJoinPool—how does a fork/ join pool differ from a thread pool? When might you prefer one, and when the other?
+----------
+From what I'm reading it sounds like in a threadpool each thread is given a chunk of work, and it works until that chunk is done and then reports the results. Thread pools work when you can split the work up before hand, (via the producer consumer pattern) and put those chunks on a queue. ForkJoinPool works when you can't split up the work before hand, for example with the wikipedia example, we split up the work by pages, which worked because all pages are approximately the same size. What if we had a virtual library, with an xml structure that had top level "book" elements, with child "page" elements? If we split the work by books, some books might have 20 pages, and some 2000, making it difficult to ensure consumers got equal work loads. The fork join pool helps solve this by allowing consumers to take something from the queue, break it up, and put the components back on the queue for another worker.
+(http://stackoverflow.com/questions/7926864/how-is-the-fork-join-framework-better-than-a-thread-pool).
+
+What is work-stealing and when might it be useful? How would you implement work-stealing with the facilities provided by java.util.concurrent?
+-------
+Work stealing is a mechanism by which consumer threads can publish information about what they are working on so underutilized threads can steal the work. It sounds like the simplest way to implmennt it is pseudo code like this
+
+    Result solve(Problem problem) {
+      if (problem is small)
+         directly solve problem
+      else {
+         split problem into independent parts
+         fork new subtasks to solve each part and place on queue
+         join all subtasks
+         compose result from subresults
+      }
+    }
+
+It would be similar to the producer consumer approach but the consumers would be able to put tasks back onto the queue, and tasks in the queue would have to have a mechanism to report their results back to the consumer that requested them, maybe via a seperated completed queue for each consumer
+
+What is the difference between a CountDownLatch and a CyclicBarrier? When might you use one, and when the other?
+-------
+(http://stackoverflow.com/questions/4168772/java-concurrency-countdown-latch-vs-cyclic-barrier) Cyclic barrier is reusable. Basically, you hit the barrier, run a programmer defined task, and the barrier is reset and can be used again. Countdown latch is like a count down, you count down until it ends, and then go onto the next thing
+
+What is Amdahl’s law? What does it say about the maximum theoretical speedup we might be able to get for our word-counting algorithm?
+------------------------
+A law that explains how to calculate potential performance improvements to specific parts of an application. It works by breaking the application apart into 2 parts, the part that is being improved and the part that is not. Generally it is applied to paralelization by breaking the program into parts that are parrelizable and parts that are sequential. In the case our word counting algorithm, it predicts that more cores have a strong effect on the program because most of it is paralizable. From the original programs benchmaarks parsing, the only sequential operation, takes less than 10% of the time while counting, the paralizable part takes over 90%.
+
+Do
+======
+
+Rewrite the producer-consumer code to use a separate “end of data” flag instead of a poison pill. Make sure that your solution correctly handles the cases where the producer runs faster than the consumer and vice versa. What will happen if the consumer has already tried to remove something from the queue when the “end of data” flag is set? Why do you think that the poison-pill approach is so commonly used?
+-------------
+
+I wasn't able to do this because getting the wikipedia files was too cumbersome, but I have some theories. I'm assuming the end of data flag is some sort of shared variable that all consumers would have to check before going to the queue. In that case you have to handle all sorts of locking and synchronization logic around that variable, introducing risks for contention and deadlocking. The poison pill approach simplfies things because you only have one mechanism for the threads to communicate and coordinate, the queue.
+
+Run the different versions of the word-count program on your computer, as well as any others you can get access to. How do the performance graphs differ from one computer to another? If you could run it on a computer with 32 cores, do you think you would see anything close to a 32x speedup?
+--------------------
+
+Amdahl's law predicts a 7.8x speed up based on assuming 90% of the process is paralizable. So no.
