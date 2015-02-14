@@ -8,3 +8,11 @@ exit
 (recursive-sum [1,2,3,4,5])
 (recursive-sum [1,2,3,5])
 exit
+read-string "#(+ 1 %)"
+(read-string "#(+ 1 %)")
+(read-string "#(+ % %)")
+(read-string "#(+ %acc %x)")
+(read-string "#(+ %1 %2)")
+exit
+(reduce-sum [1,2,3])
+exit

@@ -19,7 +19,7 @@
 
 
 (defn reduce-sum [numbers]
-  (reduce (fn [acc x] (+ acc x)) 0 numbers))
+  (reduce #(+ %1 %2) 0 numbers))
 
 (defn sum [numbers]
   (reduce + numbers))
