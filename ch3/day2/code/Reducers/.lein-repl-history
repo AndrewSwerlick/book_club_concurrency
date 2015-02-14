@@ -4,3 +4,5 @@ exit
 (into [] (my-mapcat + [1,2,[3,4]]))
 (into [] (my-mapcat (partial + 1) [1,2,[3,4]]))
 exit
+(into [] (my-filter even? [1,2,3,4]))
+exit
