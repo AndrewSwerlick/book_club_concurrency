@@ -6,3 +6,5 @@ exit
 exit
 (into [] (my-filter even? [1,2,3,4]))
 exit
+(into [] (my-filter even? [1,2,3,4]))
+exit

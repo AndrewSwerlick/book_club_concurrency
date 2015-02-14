@@ -40,13 +40,13 @@
       (fn [acc v]
         (reducef acc (mapf v))))))
 
-(defn my-filter [filterf reducible]
+(defn my-filter [pred, reducible]
   (make-reducer reducible
     (fn [reducef]
       (fn [acc v]
-        (if (filterf v)
-          (reducef acc v)
-          acc)))))
+        (if (pred v)
+        (reducef acc v)
+        acc)))))
 
 (defn my-flatten [reducible]
   (make-reducer reducible
