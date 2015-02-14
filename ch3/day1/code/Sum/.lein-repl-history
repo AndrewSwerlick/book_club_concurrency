@@ -1,0 +1,10 @@
+(recursive-sum [1,2,3])
+exit
+(recursive-sum [1,2,3])
+exit
+(recursive-sum [1,2,3])
+(recursive-sum [1,2,3,4])
+(recursive-sum [1,2,3,4=5])
+(recursive-sum [1,2,3,4,5])
+(recursive-sum [1,2,3,5])
+exit

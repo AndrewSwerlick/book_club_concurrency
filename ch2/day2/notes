@@ -10,7 +10,7 @@ What is ReentrantReadWriteLock? How does it differ from ReentrantLock? When migh
 
 It sounds like ReentrantReadWriteLock is like a wrapper around 2 ReentrantLocks with special handling to allow multiple readers in the case where no one is writing. It sounds like a great use case for data that is read often, but not written often, but all threads must be sure they're reading the latest data. Maybe some sort of realtime saftey monitoring system that has to constantly check some metric (pressure, temperature, etc) which changes less frequently
 
-What is a “spurious wakeup”? When can one happen and why doesn’t a well-written program care if one does?
+What is a "spurious wakeup"? When can one happen and why doesn’t a well-written program care if one does?
 ------------
 It's when an awaiting thread is woken up although the condition for it's awaiting has not been fulfilled. One reason it might happen is because of fault tolerance built system level waiting logic. Good programs should include the awaiting inside of a condition loop, so if the thread is woken and the condition is not true, it goes right back into the loop
 
@@ -23,7 +23,7 @@ Do
 ========
 What would happen if the loop within the “dining philosophers” implementation that uses condition variables was replaced with a simple if statement? What failure modes might you see? What would happen if the call to signal was replaced by signalAll? What problems (if any) would this cause?
 ------
-My gues is that you'd see a spurious wakeup which would result in philosphers who started eating with their hands (ie eating is set to true even though both those on the left and the right are currently eating with the chopsticks). I was able to confirm this while by adding an if statement after the await which checks if either of the neighbors are eating and prints a statement if true. My statement got printed when I changed the while to an if, but not otherwise
+My guess is that you'd see a spurious wakeup which would result in philosphers who started eating with their hands (ie eating is set to true even though both those on the left and the right are currently eating with the chopsticks). I was able to confirm this while by adding an if statement after the await which checks if either of the neighbors are eating and prints a statement if true. My statement got printed when I changed the while to an if, but not otherwise
 
 As for signal vs signalAll, I don't think it will cause problems. Because of the lock on the table, only one thread can be awaiting a state change at a time, so signalAll will still only signal one thread.
 
@@ -36,4 +36,4 @@ Write a version of ConcurrentSortedList that uses a single lock instead of hand-
 Single lock:    1011742000,  947002000, 1130437000
 Hand Over Hand: 2197815000, 2182126000, 2100552000
 
-I was surprised to see the performance hit of hand over hand, I assumed it would be faster, but there must be overhead with having so many locks. However, what I saw when running the program is that the hand over hand served as a better "real-time" counter, in that the printed output of the program showed alot more granularity. With the single lock the program generally printed one value at around the 200-400 mark and then the 20,000 mark. The hand over hand printed most incremental values. 
+I was surprised to see the performance hit of hand over hand, I assumed it would be faster, but there must be overhead with having so many locks. However, what I saw when running the program is that the hand over hand served as a better "real-time" counter, in that the printed output of the program showed alot more granularity. With the single lock the program generally printed one value at around the 200-400 mark and then the 20,000 mark. The hand over hand printed most incremental values.
