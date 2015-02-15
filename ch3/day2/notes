@@ -1,0 +1,40 @@
+During Reading
+================
+
+Reducers Internal
+------------------
+Reify is basically declaring a class that implements an interface
+
+The make reducer function creates a class based on a transformation function you provide
+
+Where does the parameter reducef get used
+
+Think I still need more explanation as to how my-map works
+
+I think it's like this
+1. My map creates a reducer that transforms each value before passing to the reduce function
+2. When using "into []" the reduce function is a cojoin function which adds to the empty array
+3. This means we end transforming the value with the map function and then adding to the new array with the cojoin function
+
+
+Questions
+============
+
+Video
+----------
+I really like the definition of map he gives around 16:30
+
+Filtering - abscence of activity
+
+reduce combine vs map reduce
+
+The documentation for pcalls and pvalues—how do they differ from pmap? Is it possible to implement them in terms of pmap?
+---------------
+Pmap takes a single function and a collection and builds up a new collection
+
+The other options take a series of functions and build up a new collection
+
+You could implement the other ones in terms of pmap by treating the list of functions or expressions as a collection and defining a map function that evals the expressions
+
+Do
+==========

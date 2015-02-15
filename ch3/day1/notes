@@ -1,0 +1,9 @@
+Questions
+==========
+
+The Clojure “cheat sheet,” which contains a quick reference to the most commonly used functions
+------------
+(http://clojure.org/cheatsheet)
+
+The documentation for lazy-seq, which enables you to create your own lazy sequences
+(http://clojuredocs.org/clojure.core/lazy-seq)

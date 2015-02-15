@@ -1,0 +1,25 @@
+Questions
+==========
+
+What is the difference between future and future-call? How would you implement one in terms of the other?
+------------------
+
+Future is a macro that puts syntatic sugar around future call. Basically future
+just wraps the passed in expressions in an anonymous function to pass to future-call
+
+How do you tell if a future has been realized without blocking? How do you cancel a future?
+------------
+future-done? and future-cancel
+
+
+Do
+==
+
+Modify the transcript server so that a GET request to /translation/: n doesn’t block if the translation isn’t yet available, but returns an HTTP 409 status code instead.
+-------
+I think I have it working just by using future-done? But I am having a weird issue
+with the test proejct where it hangs and won't print the 409 statuses
+
+Implement the transcript server in an imperative language. Is your solution as simple as the functional Clojure implementation? How confident are you that it contains no race conditions?
+-----------
+No thanks. I know it will be clunky and probably have race conditions
