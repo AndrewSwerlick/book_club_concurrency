@@ -1,9 +1,9 @@
 ;---
 ; Excerpted from "Seven Concurrency Models in Seven Weeks",
 ; published by The Pragmatic Bookshelf.
-; Copyrights apply to this code. It may not be used to create training material, 
+; Copyrights apply to this code. It may not be used to create training material,
 ; courses, books, articles, and the like. Contact us if you are in doubt.
-; We make no guarantees that this code is fit for any purpose. 
+; We make no guarantees that this code is fit for any purpose.
 ; Visit http://www.pragmaticprogrammer.com/titles/pb7con for more book information.
 ;---
 (ns server.core
@@ -31,16 +31,16 @@
 (defroutes app-routes
   (POST "/session/create" []
     (response (str (create-session))))
-	
+
   (context "/session/:session-id" [session-id]
-    (let [session (get-session (edn/read-string session-id))]
+    (let [session (get-session (read-string session-id))]
       (routes
         (PUT "/snippet/:n" [n :as {:keys [body]}]
-          (accept-snippet session (edn/read-string n) (slurp body))
+          (accept-snippet session (read-string n) (slurp body))
           (response "OK"))
-		  
+
         (GET "/translation/:n" [n]
-          (response (get-translation session (edn/read-string n))))))))
+          (response (get-translation session (read-string n))))))))
 
 (defn -main [& args]
   (run-jetty (wrap-charset (api app-routes)) {:port 3000}))
