@@ -15,10 +15,10 @@ future-done? and future-cancel
 Do
 ==
 
-Modify the transcript server so that a GET request to /translation/: n doesn’t block if the translation isn’t yet available, but returns an HTTP 409 status code instead.
+Modify the transcript server so that a GET request to /translation/:n doesn’t block if the translation isn’t yet available, but returns an HTTP 409 status code instead.
 -------
 I think I have it working just by using future-done? But I am having a weird issue
-with the test proejct where it hangs and won't print the 409 statuses
+with the test project where it hangs and won't print the 409 statuses.
 
 Implement the transcript server in an imperative language. Is your solution as simple as the functional Clojure implementation? How confident are you that it contains no race conditions?
 -----------
