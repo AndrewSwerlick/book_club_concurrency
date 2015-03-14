@@ -23,7 +23,7 @@
   (status (response "") 201))
 
 (defn remove-player [player-name]
-  (swap! players remove #{player-name}))
+  (swap! players #(remove (fn [player] (= player player-name)) %)))
 
 (defroutes app-routes
   (GET "/players" [] (list-players))
