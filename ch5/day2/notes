@@ -1,0 +1,7 @@
+The documentation for Process.monitor—how does monitoring a process differ from linking? When might you use monitors and when links? How do exceptions work in Elixir? When might you choose to use exception handling instead of supervision and the “let it crash” pattern?
+======
+When you monitor a process you recieve a "DOWN" message if the process exits (normally or in error) or if the process is not currently running. Linking provides more information and more tightly couples things. Monitoring is a good fit for service discovery type situations.
+
+How do exceptions work in Elixir? When might you choose to use exception handling instead of supervision and the “let it crash” pattern?
+==========
+it's a standard try rescue block pattern like ruby's begin rescue. Honestly I don't know when you'd use them and can't find good resources on them
