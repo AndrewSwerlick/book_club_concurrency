@@ -1,0 +1,44 @@
+Find
+=========
+
+As well as alt!, core.async also provides alts!. How do they differ? When might you use one and when the other?
+--------------
+They return differently and behave diffently when input comes to a channe. alt! executes an expression and returns which expression was completed. alts! returns the value produced from the channel or true or false if writing to the channel. In general alt! seems a better fit for a pub sub system since it lets you execute arbitrary code, where as alts! is good if you just want to raw value produced by a channel
+
+
+In addition to async/merge, core.async provides a number of ways to combine multiple channels. Find the documentation for pub, sub, mult, tap, mix, and admix. When might they be useful?
+--------------
+pub and sub are obviously great for a pub sub system where arbitrary processes can publish events and subscribe to other events. Everything can publish to a single channel and publ sub can ensure that events are distributes appropriately.
+
+mult,tap seems to support a similar setup of multiple clients subscribing to all inputs to a single channel. You create a mult and any client can follow it with a tap so all clients get all inputs
+
+mix, admix creates a sort of master channel where you can add other inputs into a channel. Seems like a good fit with the above functions where you could create a master channel that is subscribed to with sub/mult or tap, and then you mix in other channels to broadcast events.
+
+
+Do
+=============
+
+Spend some time working through the order in which things take place in the RSS reader. Notice that because we’re using unbuffered channels throughout, the result is very similar to a dataflow program, with earlier go blocks in the pipeline executing as a result of later ones being available to consume data. What would happen if you used buffered channels instead? Are there any benefits to doing so? What problems are caused by using buffered channels?
+----------------
+By using unbuffered channels we ensure that we never start trying to process something before it's available (ie we don't count until we have all the article urls) If we used buffered channels, it might increase the paralellism of our application because we could start counting the moment we got our first article url, instead of waiting until we had all of them. However it would also mean we'd need to be more explicit about conditions for closing channels and stoping the process, maybe through some sort of poison pills
+
+Implement your own version of async/merge. Remember to handle the case where one or more of the source channels are closed. (Hint: You might find this easier to implement with alts! than with alt!).
+----------------------
+I think we can do this by alts! on all of the channels and taking the return value from alts! and adding it to a new channel
+
+Use Clojure’s macro expansion facility to examine the macro expansion of alt!: channels.core = > (macroexpand-1 '( alt! ch1 ([ x] (println x)) ch2 ([ y] (println y))))
+----------------------
+
+(let [G__4520 ch1
+  G__4521 ch2
+    [val__1480__auto__ ch4522 :as ret4523]
+      (async/alts! [G__4520 G__4521])]
+        (cond
+          (or (= ch4522 G__4520))
+          (let [[x] ret4523] (println x))
+          (or (= ch4522 G__4521))
+          (let [[y] ret4523] (println y))
+          (= ch4522 :default)
+          val__1480__auto__))
+
+It uses a let to set the variable up and then just inlines the body of the function

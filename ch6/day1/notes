@@ -1,0 +1,26 @@
+Find
+===========
+
+The core.async documention
+---------------------------
+http://clojure.github.io/core.async/
+
+
+Either Timothy Baldridge’s “Core Async Go Macro Internals” screencasts or Huey Petersen’s “The State Machines of core.async” blog post, both of which describe how the go macro implements inversion of control.
+--------------
+
+I read the blog post and although it went a little over my head in the details I think I have the gist. Basically the code is rewritten into blocks of loop recur that are kicked off by channels. So run statement machine checks a channel for a value, if there is one it goes into an internal loops that checks the states, and if not it reliquishes the thread until another channel takes it.
+
+Do
+===========
+Our implementation of map-chan created and returned a synchronous (unbuffered) channel. What would happen if it used a buffered channel instead? Which is preferable? Under what circumstances (if any) would a buffered channel be an appropriate choice?
+----------------------------------
+If you used a buffered channel you might drop some values and they will get unmapped. For map, you definitely don't want that because that really breaks the point of mapping. Buffered channels are really only good in situations where lost data is not a concern. A good example might be where you're reducing across and channel and only care about the final result. Then a sliding buffer is fine.
+
+As well as map<, core.async provides map>. How do they differ? Create your own version of map>. When might you use one, and when the other?
+---------------------
+map< takes a source channel and creates a new channel with mapped values. map> takes a target channel creates a new channel that "proxies" to the target after applying the map function.
+
+Create a channel-based version of a parallel map (similar to Clojure’s existing pmap or the parallel map function we created in Elixir in the previous chapter).
+--------------
+I think you want to create a channel for each value, so take your collection, do a normal map to create channels for each value, have those channels push onto a single target channel and then read from the channel in the end. Might have to have the mapped values keep their original index so things can be sorted after all values are processed. Also have to figure out how to close the channel

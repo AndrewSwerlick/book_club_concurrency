@@ -1,0 +1,28 @@
+Joe Armstrong’s Lambda Jam presentation, “Systems That Run Forever Self-Heal and Scale.”
+===========
+
+What is an OTP application? Why might one be more accurately described as a component?
+=======
+It's a method of organizing code and supervisor trees in Erlang. This site has a great summary
+
+> Specifially, you might like to think of OTP in terms of the following concepts:
+
+> 1. a specification (called a ‘behaviour’) that dictates which functions your module should export
+> 2. a concrete module that declares that it conforms to a behaviour and implements these functions
+> 3. a runtime component that can execute behaviour-compliant modules within the OTP context
+
+> If you are coming from on Object Oriented world such as Java these concepts roughly translate to:
+
+> 1. an interface or abstract class that defines a behaviour
+> 2. a concrete derived implementation of that interface or abstract class
+> 3. a container that knows how to instrument instances of such concrete implementations
+
+[http://blog.bot.co.za/en/article/349/an-erlang-otp-tutorial-for-beginners#.VRivfpPF_0o]
+
+So far, the state of every actor we’ve created has been lost if that actor dies. What support does Elixir provide for persistent state?
+============
+Erlang Term Storage
+
+The fault-tolerant word-count program we developed can handle failure of a counter or the machine that it’s running on, but not the parser or accumulator. Create a version that can handle failure of any actor or node.
+============
+Don't have time, but I'll think it through. I guess you have to use ETS because otherwise you risk losing state? Or you can accept losing state and just have the accumulator and parse both simeultaneously start over using a one for all restart strategy. Create a supervisor for the accumator and parser and restart both if one fails. You don't need to worry about the counters, if they send you a page from the last parser it's NBD because you'll just ignore whent its sent again
